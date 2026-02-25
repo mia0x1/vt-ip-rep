@@ -6,6 +6,8 @@ import os
 import time
 from dotenv import load_dotenv
 
+from tabulate import tabulate
+
 # --- Variables ---
 
 load_dotenv()
@@ -84,7 +86,7 @@ def format_results(vt_results):
             "malicious": 0,
             "suspicious": 0,
             "timeout": 0,
-            "undected": 0
+            "undetected": 0
         }
 
         scan_results = inner_dict['data']['attributes']['last_analysis_results']
@@ -97,6 +99,18 @@ def format_results(vt_results):
 
     return(results_summarized)
 
+def print_summary(results_summarized):
+    headers = ["IP address", "harmless", "malicious", "suspicous", "timeout", "undetected"]
+    rows = []
+    for ip, result in results_summarized.items():
+        categories = ["harmless", "malicious", "suspicious", "timeout", "undetected"]
+        values = [result.get(cat, 0)for cat in categories]  
+        rows.append([ip, *values])
+
+    create_table(headers, rows)
+    
+def create_table(headers, rows):
+    print(tabulate(rows, headers=headers, tablefmt="fancy_grid", numalign="center"))
 
 def main():
     ip_strs = read_file(ioc_file)
@@ -106,7 +120,8 @@ def main():
     vt_results = vt_api_call(api_base_url, headers, filtered_ips)
 
     results_summarized = format_results(vt_results)
-    print(results_summarized)
+
+    print_summary(results_summarized)
 
 if __name__ == "__main__":
     main()
