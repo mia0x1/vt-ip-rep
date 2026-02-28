@@ -24,7 +24,19 @@ pip3 install -r requirements.txt
 
 ## Usage
 
-python3 vt.py
+You have to provide a plain text file containing one IP address (IoC) per line.
+
+Use -f <path> to specify the path of your IoC file
+
+```bash
+python3 vt.py -f example.txt
+```
+
+Scan a single host:
+
+```bash
+python3 netscan.py -H 10.10.0.1
+```
 
 ## License
 

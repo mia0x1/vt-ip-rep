@@ -1,5 +1,6 @@
 # --- Imports ---
 
+import argparse
 import ipaddress
 import requests
 import os
@@ -11,8 +12,6 @@ from tabulate import tabulate
 # --- Variables ---
 
 load_dotenv()
-
-ioc_file = "example.txt"
 
 api_base_url = "https://www.virustotal.com/api/v3/ip_addresses/"
 
@@ -112,8 +111,25 @@ def print_summary(results_summarized):
 def create_table(headers, rows):
     print(tabulate(rows, headers=headers, tablefmt="fancy_grid", numalign="center"))
 
+# --- CLI / parser ---
+
+def build_parser():
+    parser = argparse.ArgumentParser()
+
+    parser.add_argument('-f', '--file', type=str, default="example.txt", help="Specify a file path for your IoC file")
+
+    return parser
+
 def main():
-    ip_strs = read_file(ioc_file)
+    parser = build_parser()
+    args = parser.parse_args()
+
+    ioc_file = args.file
+
+    if os.path.isfile(ioc_file):
+        ip_strs = read_file(ioc_file)
+    else:
+        raise FileNotFoundError(f"File not found: {ioc_file}")
 
     filtered_ips = filter_global_ipv4(ip_strs)
 
