@@ -32,12 +32,6 @@ Use -f <path> to specify the path of your IoC file
 python3 vt.py -f example.txt
 ```
 
-Scan a single host:
-
-```bash
-python3 netscan.py -H 10.10.0.1
-```
-
 ## License
 
 MIT
